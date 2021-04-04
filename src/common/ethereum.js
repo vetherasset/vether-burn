@@ -3,7 +3,7 @@ import defaults from './defaults'
 import vetherTokenAbi from '../artifacts/vetherTokenAbi'
 import uniswapPairAbi from '../artifacts/uniswapPairAbi'
 import humanStandardTokenAbi from '../artifacts/humanStandardTokenAbi'
-const pLimit = require('p-limit')
+import pLimit from 'p-limit'
 
 const getEmissionEra = async (provider) => {
 	const contract = new ethers.Contract(
@@ -116,7 +116,6 @@ const getDaysContributed = async (emissionEra, address, provider) => {
 
 const getClaimDayNums = async (era, address, provider) => {
 	const curEra = Number(await getEmissionEra(provider))
-	// console.log(`curEra ${curEra}`)
 	if (era > curEra || era < 1) {
 		return []
 	}
@@ -127,18 +126,12 @@ const getClaimDayNums = async (era, address, provider) => {
 	)
 	const concurrency = 8
 	const limit = pLimit(concurrency)
-	// Get the number of days on which the user burned during the era.
 	const numBurnDays = await contract.getDaysContributedForEra(address, era)
-	// console.log(`numBurnDays ${numBurnDays}`)
-	// Get the day numbers on which the burns occurred.
 	const idxs = Array.from({ length: numBurnDays }, (x, i) => i)
-	// console.log(`idxs ${idxs}`)
 	const ps0 = idxs.map(idx => {
 		return limit(() => contract.mapMemberEra_Days(address, era, idx))
 	})
 	const burnDayNums = await Promise.all(ps0)
-	// console.log(`burnDayNums ${burnDayNums}`)
-	// Determine which day numbers have nonzero share.
 	const ps1 = burnDayNums.map(dayNum => {
 		return limit(() => {
 			return contract.getEmissionShare(era, dayNum, address).then(v => {
@@ -147,31 +140,8 @@ const getClaimDayNums = async (era, address, provider) => {
 		})
 	})
 	const burnDayNumsWithNonzeroShare = await Promise.all(ps1)
-	// console.log(`burnDayNumsWithNonzeroShare ${burnDayNumsWithNonzeroShare}`)
 	const claimDayNums = burnDayNumsWithNonzeroShare.filter(x => x).sort((a, b) => a - b)
-	// console.log(`claimDayNums ${claimDayNums}`)
 	return claimDayNums
-}
-
-const getEachDayContributed = async (daysContributed, era, address, provider) => {
-	const emissionEra = Number(await getEmissionEra(provider))
-	const emissionDay = Number(await getEmissionDay(provider))
-	const contract = new ethers.Contract(
-		defaults.network.address.vether,
-		vetherTokenAbi,
-		provider,
-	)
-	const days = []
-	for (let j = daysContributed - 1; j >= 0; j--) {
-		const day = +(await contract.mapMemberEra_Days(address, era, j))
-		if (era < emissionEra || (era >= emissionEra && day < emissionDay)) {
-			const share = await getShare(ethers.BigNumber.from(era), ethers.BigNumber.from(day), address, provider)
-			if (Number(ethers.utils.formatEther(share)) > 0) {
-				days.push(day)
-			}
-		}
-	}
-	return days
 }
 
 const getShare = async (era, day, address, provider) => {
@@ -192,7 +162,18 @@ const claimShare = async (era, day, provider) => {
 	return await contract.withdrawShare(era, day)
 }
 
+
+const getERC20BalanceOf = async (tokenAddress, address, provider) => {
+	const contract = new ethers.Contract(
+		tokenAddress,
+		humanStandardTokenAbi,
+		provider,
+	)
+	return await contract.balanceOf(address)
+}
+
 export {
 	getEmissionEra, getEmissionDay, getEmission, getNextEraDayTime, getNextDayTime, getNextEmission, getCurrentBurn,
-	getEmitted, getUniswapAssetPrice, getVetherValue, getDaysContributed, getClaimDayNums, getEachDayContributed, getShare, claimShare,
+	getEmitted, getUniswapAssetPrice, getVetherValue, getDaysContributed, getClaimDayNums, getShare,
+	claimShare, getERC20BalanceOf,
 }
