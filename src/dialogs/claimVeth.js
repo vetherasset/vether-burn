@@ -6,7 +6,7 @@ import {
 	useToast,
 } from '@chakra-ui/react'
 import { useWallet } from 'use-wallet'
-import { getEmissionEra, getDaysContributed, getEachDayContributed, getShare, claimShare } from '../common/ethereum'
+import { getClaimDayNums, getEmissionEra, getDaysContributed, getEachDayContributed, getShare, claimShare } from '../common/ethereum'
 import { getAvailableEras, prettifyCurrency } from '../common/utils'
 import { claimed, failed, rejected } from '../messages'
 
@@ -36,6 +36,8 @@ export const ClaimVeth = () => {
 		if(wallet.account) {
 			const provider = new ethers.providers.Web3Provider(wallet.ethereum)
 			if(era) {
+				getClaimDayNums(era, wallet.account, provider)
+					.then(claimDayNums => console.log(`claimDayNums ${claimDayNums}`))
 				getDaysContributed(era, wallet.account, provider)
 					.then((d) => {
 						getEachDayContributed(d.toNumber(), era, wallet.account, provider)
