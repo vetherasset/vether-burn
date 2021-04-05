@@ -152,7 +152,6 @@ const claimShare = async (era, day, provider) => {
 	return await contract.withdrawShare(era, day)
 }
 
-
 const getERC20BalanceOf = async (tokenAddress, address, provider) => {
 	const contract = new ethers.Contract(
 		tokenAddress,
