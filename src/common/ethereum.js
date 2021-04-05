@@ -115,31 +115,21 @@ const getDaysContributed = async (emissionEra, address, provider) => {
 }
 
 const getClaimDayNums = async (era, address, provider) => {
-	const curEra = Number(await getEmissionEra(provider))
-	if (era > curEra || era < 1) {
-		return []
-	}
 	const contract = new ethers.Contract(
 		defaults.network.address.vether,
 		vetherTokenAbi,
 		provider,
 	)
-	const concurrency = 8
+	const concurrency = 16
 	const limit = pLimit(concurrency)
 	const numBurnDays = await contract.getDaysContributedForEra(address, era)
 	const idxs = Array.from({ length: numBurnDays }, (x, i) => i)
-	const ps0 = idxs.map(idx => {
-		return limit(() => contract.mapMemberEra_Days(address, era, idx))
-	})
-	const burnDayNums = await Promise.all(ps0)
-	const ps1 = burnDayNums.map(dayNum => {
-		return limit(() => {
-			return contract.getEmissionShare(era, dayNum, address).then(v => {
-				return Number(ethers.utils.formatEther(v)) > 0 ? dayNum : null
-			})
-		})
-	})
-	const burnDayNumsWithNonzeroShare = await Promise.all(ps1)
+	const ps = idxs.map(idx => limit(() => (
+		contract.mapMemberEra_Days(address, era, idx)
+			.then(dayNum => contract.getEmissionShare(era, dayNum, address)
+				.then(v => Number(ethers.utils.formatEther(v)) > 0 ? dayNum : null))
+	)))
+	const burnDayNumsWithNonzeroShare = await Promise.all(ps)
 	const claimDayNums = burnDayNumsWithNonzeroShare.filter(x => x).sort((a, b) => a - b)
 	return claimDayNums
 }

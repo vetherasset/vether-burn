@@ -39,10 +39,7 @@ export const ClaimVeth = () => {
 			const provider = new ethers.providers.Web3Provider(wallet.ethereum)
 			if(era) {
 				getClaimDayNums(era, wallet.account, provider)
-					.then(cd => {
-						setEachDayContributed(cd)
-						console.log(cd)
-					})
+					.then(cd => setEachDayContributed(cd))
 			}
 		}
 		if (era === '') setEachDayContributed(undefined)
