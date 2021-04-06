@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import defaults from '../common/defaults'
 import { Flex, Accordion, AccordionButton, AccordionItem, AccordionPanel,
 	Box, Container, Heading, Fade } from '@chakra-ui/react'
+import { useWallet } from 'use-wallet'
 import { BurnEther } from '../dialogs/burnEther'
 import { ClaimVeth } from '../dialogs/claimVeth'
 
@@ -39,65 +40,79 @@ const ActionButton = (props) => {
 
 export const ActionPanel = (props) => {
 
+	const [walletConnected, setWalletConnected] = useState(undefined)
+	const wallet = useWallet()
 	const [isOpen, setIsOpen] = useState(-1)
 
-	return (
-		<Flex w={{ base: '100%', md: '60ch' }}
-			bg={isOpen > -1 ? '#fff6d9' : 'accent'}
-			color='black'
-			pos={isOpen > -1 ? 'fixed' : { base: 'fixed', sm: 'relative' }}
-			bottom={isOpen > -1 ? { base: '0', md: '35px' } : '0'}
-			maxWidth={'60ch'}
-			borderRadius={{ base: isOpen > -1 ? '0.8rem 0.8rem 0 0' : '0', sm: '0.8rem' }}
-			left='50%'
-			transform='translateX(-50%)'
-			alignItems='center'
-			{...props}>
-			<Accordion
-				layerStyle='actionPanel'
-				alignItems='middle'
-				allowToggle
-				onChange={(n) => setIsOpen(n)}>
-				<AccordionItem border='none'>
-					{({ isExpanded }) => (
-						<>
-							{isExpanded &&
-								<>
-									<CloseButton/>
-								</>
-							}
-							<AccordionPanel p={0} visibility={isOpen === -1 ? 'hidden' : 'visible'}>
-								<Box maxW={defaults.layout.width} m='0 auto'>
-									<Container minH='600px' display='flex' flexFlow='column' justifyContent='space-around'>
-										<BurnEther/>
-									</Container>
-								</Box>
-							</AccordionPanel>
-							{!isExpanded && isOpen === -1 &&
-								<ActionButton name='Burn'/>
-							}
-						</>
-					)}
-				</AccordionItem>
+	useEffect(() => {
+		const v = wallet.account ? true : false
+		setWalletConnected(v)
+	}, [wallet])
 
-				<AccordionItem border='none'>
-					{({ isExpanded }) => (
-						<>
-							{isExpanded &&
-									<CloseButton/>
-							}
-							<AccordionPanel p={0} visibility={isOpen === -1 ? 'hidden' : 'visible'}>
-								<Container minH='600px' display='flex' flexFlow='column' justifyContent='space-around'>
-									<ClaimVeth/>
-								</Container>
-							</AccordionPanel>
-							{!isExpanded && isOpen === -1 &&
-								<ActionButton name='Claim'/>
-							}
-						</>
-					)}
-				</AccordionItem>
-			</Accordion>
-		</Flex>
+	return (
+		<>
+			<Flex w={{ base: '100%', md: '60ch' }}
+				bg={isOpen > -1 ? '#fff6d9' : 'accent'}
+				color='black'
+				pos={isOpen > -1 ? 'fixed' : { base: 'fixed', sm: 'relative' }}
+				bottom={isOpen > -1 ? { base: '0', md: '35px' } : '0'}
+				maxWidth={'60ch'}
+				borderRadius={{ base: isOpen > -1 ? '0.8rem 0.8rem 0 0' : '0', sm: '0.8rem' }}
+				left='50%'
+				transform='translateX(-50%)'
+				alignItems='center'
+				{...props}>
+				<Accordion
+					layerStyle='actionPanel'
+					alignItems='middle'
+					allowToggle
+					onChange={(n) => setIsOpen(n)}>
+					<AccordionItem isDisabled={!walletConnected} border='none'>
+						{({ isExpanded }) => (
+							<>
+								{isExpanded &&
+									<>
+										<CloseButton/>
+									</>
+								}
+								<AccordionPanel p={0} visibility={isOpen === -1 ? 'hidden' : 'visible'}>
+									<Box maxW={defaults.layout.width} m='0 auto'>
+										<Container minH='600px' display='flex' flexFlow='column' justifyContent='space-around'>
+											<BurnEther/>
+										</Container>
+									</Box>
+								</AccordionPanel>
+								{!isExpanded && isOpen === -1 &&
+									<ActionButton name='Burn'/>
+								}
+							</>
+						)}
+					</AccordionItem>
+
+					<AccordionItem isDisabled={!walletConnected} border='none'>
+						{({ isExpanded }) => (
+							<>
+								{isExpanded &&
+										<CloseButton/>
+								}
+								<AccordionPanel p={0} visibility={isOpen === -1 ? 'hidden' : 'visible'}>
+									<Container minH='600px' display='flex' flexFlow='column' justifyContent='space-around'>
+										<ClaimVeth/>
+									</Container>
+								</AccordionPanel>
+								{!isExpanded && isOpen === -1 &&
+									<ActionButton name='Claim'/>
+								}
+							</>
+						)}
+					</AccordionItem>
+				</Accordion>
+			</Flex>
+			{!walletConnected &&
+				<Container centerContent>
+					<span><em>Connect a wallet to burn or claim.</em></span>
+				</Container>
+			}
+		</>
 	)
 }
