@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import defaults from '../common/defaults'
 import { Flex, Accordion, AccordionButton, AccordionItem, AccordionPanel,
@@ -40,14 +40,8 @@ const ActionButton = (props) => {
 
 export const ActionPanel = (props) => {
 
-	const [walletConnected, setWalletConnected] = useState(undefined)
 	const wallet = useWallet()
 	const [isOpen, setIsOpen] = useState(-1)
-
-	useEffect(() => {
-		const v = wallet.account ? true : false
-		setWalletConnected(v)
-	}, [wallet])
 
 	return (
 		<>
@@ -67,7 +61,7 @@ export const ActionPanel = (props) => {
 					alignItems='middle'
 					allowToggle
 					onChange={(n) => setIsOpen(n)}>
-					<AccordionItem isDisabled={!walletConnected} border='none'>
+					<AccordionItem isDisabled={!wallet.account} border='none'>
 						{({ isExpanded }) => (
 							<>
 								{isExpanded &&
@@ -89,7 +83,7 @@ export const ActionPanel = (props) => {
 						)}
 					</AccordionItem>
 
-					<AccordionItem isDisabled={!walletConnected} border='none'>
+					<AccordionItem isDisabled={!wallet.account} border='none'>
 						{({ isExpanded }) => (
 							<>
 								{isExpanded &&
@@ -108,7 +102,7 @@ export const ActionPanel = (props) => {
 					</AccordionItem>
 				</Accordion>
 			</Flex>
-			{!walletConnected &&
+			{!wallet.account &&
 				<Container centerContent>
 					<span><em>Connect a wallet to burn or claim.</em></span>
 				</Container>
