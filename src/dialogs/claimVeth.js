@@ -122,7 +122,8 @@ export const ClaimVeth = () => {
 			</Flex>
 
 			<Flex flexFlow='column' h='20%'>
-				<Button w='100%'
+				<Button isDisabled={!(era && day)}
+					w='100%'
 					isLoading={submitingTx}
 					loadingText='Submitting'
 					onClick={() => {
