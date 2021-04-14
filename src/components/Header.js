@@ -24,7 +24,10 @@ export const Header = (props) => {
 				<WalletConnectionToggle
 					marginLeft='0.6rem'
 					size={size} />
-				<InfoMenu size={size} />
+				{useBreakpointValue({
+					base: '',
+					sm: <InfoMenu size={size} />,
+				})}
 			</Flex>
 		</Flex>
 	)

@@ -4,7 +4,7 @@ const defaults = {}
 defaults.network = {}
 defaults.network.chainId = 1
 defaults.network.provider = new ethers.providers.WebSocketProvider(
-	'wss://eth-mainnet.ws.alchemyapi.io/v2/tot_96ctq6XtnHUl7cj2fg-JY_5rLzRT',
+	'wss://eth-mainnet.ws.alchemyapi.io/v2/wnUsQQ_Da0Q5nlDFz73P48VsApLHIE1m',
 	 defaults.network.chainId,
 	 )
 
