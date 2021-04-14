@@ -36,8 +36,8 @@ const App = () => {
 								} />
 							</Switch>
 							<ActionPanel />
+							<Footer/>
 						</Box>
-						<Footer width='100%' p='1.2rem 1rem' justifyContent='center'/>
 					</Box>
       	</UseWalletProvider>
 			</ChakraProvider>
