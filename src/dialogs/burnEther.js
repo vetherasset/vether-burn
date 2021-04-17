@@ -6,9 +6,10 @@ import {
 	useToast,
 } from '@chakra-ui/react'
 import { useWallet } from 'use-wallet'
-import { getCurrentBurn, getEmission } from '../common/ethereum'
+import { getCurrentBurn, getEmission, getUniswapAssetPrice } from '../common/ethereum'
 import { getVetherValueStrict, prettifyCurrency } from '../common/utils'
 import { failed, rejected, insufficientBalance, destroyed, walletNotConnected, amountOfEthToBurnNotEntered } from '../messages'
+import { HighImpliedPriceWarning } from '../components/HighImpliedPriceWarning'
 
 export const BurnEther = () => {
 
@@ -18,6 +19,10 @@ export const BurnEther = () => {
 	const [value, setValue] = useState(0)
 	const [currentBurn, setCurrentBurn] = useState(undefined)
 	const [emission, setEmission] = useState(undefined)
+	const [ethPriceUsd, setEthPriceUsd] = useState(undefined)
+	const [vethPriceEth, setVethPriceEth] = useState(undefined)
+	const [vethImpliedPriceUsd, setVethImpliedPriceUsd] = useState(undefined)
+	const [vethMarketPriceUsd, setVethMarketPriceUsd] = useState(undefined)
 	const [working, setWorking] = useState(false)
 
 	useEffect(() => {
@@ -28,6 +33,28 @@ export const BurnEther = () => {
 		getEmission(defaults.network.provider).then(n => setEmission(Number(ethers.utils.formatEther(n))))
 	}, [])
 
+	useEffect(() => {
+		getUniswapAssetPrice(defaults.network.address.uniswap.usdc, 6, 18, true, defaults.network.provider)
+			.then(n => setEthPriceUsd(n))
+	}, [])
+
+	useEffect(() => {
+		getUniswapAssetPrice(defaults.network.address.uniswap.veth, 18, 18, false, defaults.network.provider)
+			.then(n => setVethPriceEth(n))
+	}, [])
+
+	useEffect(() => {
+		if (currentBurn && emission && ethPriceUsd) {
+			setVethImpliedPriceUsd(currentBurn / emission * ethPriceUsd)
+		}
+	}, [currentBurn, emission, ethPriceUsd])
+
+	useEffect(() => {
+		if (vethPriceEth && ethPriceUsd) {
+			setVethMarketPriceUsd(vethPriceEth * ethPriceUsd)
+		}
+	}, [vethPriceEth, ethPriceUsd])
+
 	return (
 		<>
 			<Flex flexFlow='column' h='25%'>
@@ -36,6 +63,9 @@ export const BurnEther = () => {
 			</Flex>
 
 			<Flex flexFlow='column' h='25%'>
+				{vethImpliedPriceUsd > vethMarketPriceUsd &&
+					<HighImpliedPriceWarning vethImpliedPriceUsd={vethImpliedPriceUsd} vethMarketPriceUsd={vethMarketPriceUsd} />
+				}
 				<Heading as='h3' size='sm' mb='11px'>Amount Eth to burn</Heading>
 				<NumberInput
 					min={0}
