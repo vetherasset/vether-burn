@@ -8,8 +8,8 @@ export default {
 	},
 	variants: {
 		solid: () => ({
-			color: 'rgb(17, 13, 1)',
-			bg: 'rgb(255, 186, 0)',
+			color: '#000',
+			bg: 'accent',
 			_hover: {
 				bg: '#ffc300',
 			},
