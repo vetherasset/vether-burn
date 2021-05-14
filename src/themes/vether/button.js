@@ -2,6 +2,7 @@ export default {
 	baseStyle: {
 		fontFamily: 'Button',
 		lineHeight: '0px',
+		borderRadius: '4px',
 		_focus: {
 			boxShadow: '0 0 0 3px rgba(206, 150, 0, 0.6)',
 		},
