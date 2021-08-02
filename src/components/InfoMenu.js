@@ -3,7 +3,6 @@ import { Button, Link, Menu, MenuButton, MenuItem, MenuDivider, MenuList, Image 
 import { HiDotsHorizontal } from 'react-icons/hi'
 import { FaDiscord, FaTelegramPlane, FaGithub } from 'react-icons/fa'
 import { IoIosPaper } from 'react-icons/io'
-import { IoBarChart } from 'react-icons/io5'
 import { MdHelp } from 'react-icons/md'
 import UniswapIcon from '../assets/svg/uniswap.svg'
 
@@ -38,12 +37,6 @@ export const InfoMenu = (props) => {
 					<Link {...linkStyle} isExternal href='https://app.uniswap.org/#/swap/0x4ba6ddd7b89ed838fed25d208d4f644106e34279'>
 						<Image src={UniswapIcon} display='inline-block' marginInlineEnd='0.5rem' width='14.4px' verticalAlign='baseline' />
 						Uniswap
-					</Link>
-				</MenuItem>
-				<MenuItem {...menuItemStyle}>
-					<Link {...linkStyle} isExternal href='https://stats.vetherasset.app/'>
-						<IoBarChart style={iconStyle}/>
-						Analytics
 					</Link>
 				</MenuItem>
 				<MenuItem {...menuItemStyle}>
