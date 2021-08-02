@@ -2,11 +2,30 @@ import { ethers } from 'ethers'
 const defaults = {}
 
 defaults.network = {}
-defaults.network.chainId = 1
-defaults.network.provider = new ethers.providers.WebSocketProvider(
-	'wss://eth-mainnet.alchemyapi.io/v2/tot_96ctq6XtnHUl7cj2fg-JY_5rLzRT',
-	 defaults.network.chainId,
-	 )
+defaults.network.chainId = Number(process.env.REACT_APP_CHAIN_ID)
+defaults.network.provider = new ethers.providers.FallbackProvider(
+	[
+		{
+			provider: new ethers.providers.AlchemyProvider(
+				defaults.network.chainId,
+				process.env.REACT_APP_ALCHEMY_KEY,
+			),
+			weight: 1,
+			priority: 1,
+			stallTimeout: 2000,
+		},
+		{
+			provider: new ethers.providers.InfuraProvider(
+				defaults.network.chainId,
+				process.env.REACT_APP_INFURA_KEY,
+			),
+			weight: 1,
+			priority: 2,
+			stallTimeout: 2000,
+		},
+	],
+	1,
+)
 
 defaults.network.address = {}
 // Rinkeby Testnet // defaults.network.address.vether = '0x4257e8a2052aFE4E7a52ee9233139EB28FB4BF44'
