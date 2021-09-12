@@ -41,7 +41,7 @@ const Links = (props) => {
 				<IoIosPaper style={iconStyle}/>
 				Whitepaper
 			</Link>
-			<Link {...linkStyle} isExternal href='https://stats.vetherasset.app/'>
+			<Link {...linkStyle} href='https://analytics.vetherasset.app/'>
 				<IoBarChart style={iconStyle}/>
 				Analytics
 			</Link>
