@@ -11,6 +11,7 @@ import { getCurrentBurn, getEmission, getUniswapAssetPrice } from '../common/eth
 import { getVetherValueStrict, prettifyCurrency } from '../common/utils'
 import { failed, rejected, insufficientBalance, destroyed, walletNotConnected, amountOfEthToBurnNotEntered } from '../messages'
 import { HighImpliedPriceWarning } from '../components/HighImpliedPriceWarning'
+import { VaderSnapshotHeightWarning } from '../components/VaderSnapshotHeightWarning'
 
 export const BurnEther = (props) => {
 
@@ -29,6 +30,7 @@ export const BurnEther = (props) => {
 	const [price, setPrice] = useState(undefined)
 	const [working, setWorking] = useState(false)
 	const [warning, setWarning] = useState(-1)
+	const [vaderWarning, setVaderWarning] = useState(1)
 
 	useEffect(() => {
 		if(props.visible > -1) {
@@ -91,6 +93,11 @@ export const BurnEther = (props) => {
 				<Box as='h3' fontSize='1.2rem' fontWeight='bold' size='md' textAlign='center'>ACQUIRE VETHER</Box>
 				<Box as='span' textAlign='center'>Acquire a share of today’s emission.</Box>
 			</Flex>
+
+			<VaderSnapshotHeightWarning
+				state={vaderWarning}
+				setState={setVaderWarning}
+			/>
 
 			<HighImpliedPriceWarning
 				state={warning}
