@@ -23,6 +23,7 @@ export const VaderSnapshotHeightWarning = (props) => {
 			textAlign='justify'
 			display={props.state < 1 ? 'none' : 'flex'}
 			marginBottom='0.5rem'
+			borderRadius='8px'
 		>
 			<AlertIcon color='red.500' />
 			<Box flex='1'>
