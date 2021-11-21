@@ -7,10 +7,9 @@ import {
 	useToast, Spinner,
 } from '@chakra-ui/react'
 import { useWallet } from 'use-wallet'
-import { getCurrentBurn, getEmission, getUniswapAssetPrice } from '../common/ethereum'
+import { getCurrentBurn, getEmission } from '../common/ethereum'
 import { getVetherValueStrict, prettifyCurrency } from '../common/utils'
 import { failed, rejected, insufficientBalance, destroyed, walletNotConnected, amountOfEthToBurnNotEntered } from '../messages'
-import { HighImpliedPriceWarning } from '../components/HighImpliedPriceWarning'
 import { VaderSnapshotHeightWarning } from '../components/VaderSnapshotHeightWarning'
 
 export const BurnEther = (props) => {
@@ -26,10 +25,7 @@ export const BurnEther = (props) => {
 	const [value, setValue] = useState(0)
 	const [currentBurn, setCurrentBurn] = useState(undefined)
 	const [emission, setEmission] = useState(undefined)
-	const [ethPrice, setEthPrice] = useState(undefined)
-	const [price, setPrice] = useState(undefined)
 	const [working, setWorking] = useState(false)
-	const [warning, setWarning] = useState(-1)
 	const [vaderWarning, setVaderWarning] = useState(1)
 
 	useEffect(() => {
@@ -52,41 +48,6 @@ export const BurnEther = (props) => {
 		}
 	}, [props.visible])
 
-	useEffect(() => {
-		if(props.visible > -1) {
-			getUniswapAssetPrice(
-				defaults.network.address.uniswap.usdc,
-				6,
-				18,
-				true,
-				defaults.network.provider,
-			)
-				.then(n => setEthPrice(n))
-		}
-	}, [props.visible])
-
-	useEffect(() => {
-		if(props.visible > -1) {
-			getUniswapAssetPrice(
-				defaults.network.address.uniswap.veth,
-				18,
-				18,
-				false,
-				defaults.network.provider,
-			)
-				.then(n => setPrice(n))
-		}
-	}, [props.visible])
-
-	useEffect(() => {
-		if(currentBurn && emission && price && ethPrice) {
-			if (((currentBurn / emission) * (ethPrice)) > (price * ethPrice)) {
-				setWarning(1)
-			}
-		}
-		return () => setWarning(-1)
-	}, [currentBurn, emission, price, ethPrice, props.visible])
-
 	return (
 		<>
 			<Flex flexFlow='column' width={props.width}>
@@ -97,17 +58,6 @@ export const BurnEther = (props) => {
 			<VaderSnapshotHeightWarning
 				state={vaderWarning}
 				setState={setVaderWarning}
-			/>
-
-			<HighImpliedPriceWarning
-				state={warning}
-				setState={setWarning}
-				impliedValue={
-					currentBurn && emission && ethPrice
-						? prettifyCurrency((currentBurn / emission) * (ethPrice))
-						: ''
-				}
-				price={price && ethPrice ? prettifyCurrency(price * ethPrice, 0, 2) : ''}
 			/>
 
 			<Flex flexFlow='column' width={props.width}>

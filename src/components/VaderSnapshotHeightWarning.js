@@ -30,9 +30,9 @@ export const VaderSnapshotHeightWarning = (props) => {
 			>
 				<AlertIcon color='red.500' />
 				<Box flex='1'>
-					<AlertTitle>No more burns are eligible for Vader claim</AlertTitle>
+					<AlertTitle>No more eligible burning for Vader claim</AlertTitle>
 					<AlertDescription display='block'>
-						Any burn from now <b><i>will not</i></b> be eligible to claim Vader token.
+						Any burn done now <b><i>will not</i></b> make you eligible to claim Vader asset.
 					</AlertDescription>
 				</Box>
 				<CloseButton position="absolute" right="8px" top="8px" onClick={() => props.setState(0)}/>
