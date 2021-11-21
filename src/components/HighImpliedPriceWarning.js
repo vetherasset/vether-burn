@@ -22,6 +22,7 @@ export const HighImpliedPriceWarning = (props) => {
 			unmountOnExit>
 			<Alert
 				status='warning'
+				background='rgba(251, 211, 141, 0.35)'
 				variant='subtle'
 				flexDirection='row'
 				width='100%'
@@ -30,7 +31,7 @@ export const HighImpliedPriceWarning = (props) => {
 				display={props.state < 1 ? 'none' : 'flex'}
 				marginBottom='0.5rem'
 			>
-				<AlertIcon />
+				<AlertIcon color='orange.500'/>
 				<Box flex='1'>
 					<AlertTitle>Are you sure you want to burn?</AlertTitle>
 					<AlertDescription display='block'>
