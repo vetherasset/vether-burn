@@ -45,11 +45,7 @@ const Links = (props) => {
 				<IoBarChart style={iconStyle}/>
 				Analytics
 			</Link>
-			<Link {...linkStyle} isExternal href='https://docs.vetherasset.io/'>
-				<MdHelp style={iconStyle}/>
-				Docs
-			</Link>
-			<Link {...linkStyle} isExternal href='https://discord.com/invite/c5aBC7Q'>
+			<Link {...linkStyle} isExternal href='https://discord.com/vaderprotocol'>
 				<FaDiscord style={iconStyle}/>
 				Discord
 			</Link>
