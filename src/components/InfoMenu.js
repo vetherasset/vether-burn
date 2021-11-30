@@ -4,7 +4,6 @@ import { HiDotsHorizontal } from 'react-icons/hi'
 import { FaDiscord, FaTelegramPlane, FaGithub } from 'react-icons/fa'
 import { IoIosPaper } from 'react-icons/io'
 import { IoBarChart } from 'react-icons/io5'
-import { MdHelp } from 'react-icons/md'
 import UniswapIcon from '../assets/svg/uniswap.svg'
 
 const linkStyle = {
