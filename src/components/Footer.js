@@ -3,7 +3,6 @@ import { Flex, Link, useBreakpointValue, Image } from '@chakra-ui/react'
 import { FaDiscord, FaTelegramPlane, FaGithub } from 'react-icons/fa'
 import { IoIosPaper } from 'react-icons/io'
 import { IoBarChart } from 'react-icons/io5'
-import { MdHelp } from 'react-icons/md'
 import UniswapIcon from '../assets/svg/uniswap.svg'
 
 export const Footer = (props) => {
