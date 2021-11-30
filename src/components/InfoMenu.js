@@ -52,15 +52,9 @@ export const InfoMenu = (props) => {
 						Whitepaper
 					</Link>
 				</MenuItem>
-				<MenuItem {...menuItemStyle}>
-					<Link {...linkStyle} isExternal href='https://docs.vetherasset.io/'>
-						<MdHelp style={iconStyle}/>
-						Docs
-					</Link>
-				</MenuItem>
 				<MenuDivider />
 				<MenuItem {...menuItemStyle}>
-					<Link {...linkStyle} isExternal href='https://discord.com/invite/c5aBC7Q'>
+					<Link {...linkStyle} isExternal href='https://discord.com/vaderprotocol'>
 						<FaDiscord style={iconStyle}/>
 						Discord
 					</Link>
